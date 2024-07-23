@@ -2,6 +2,8 @@ package com.dkd.manage.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dkd.manage.domain.vo.RegionVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,7 @@ import com.dkd.common.core.page.TableDataInfo;
 
 /**
  * 区域管理Controller
- * 
+ *
  * @author AlanTan
  * @date 2024-07-23
  */
@@ -42,8 +44,9 @@ public class RegionController extends BaseController
     public TableDataInfo list(Region region)
     {
         startPage();
-        List<Region> list = regionService.selectRegionList(region);
-        return getDataTable(list);
+//        List<Region> list = regionService.selectRegionList(region);
+        List<RegionVo> voList = regionService.selectRegionVoList(region);
+        return getDataTable(voList);
     }
 
     /**

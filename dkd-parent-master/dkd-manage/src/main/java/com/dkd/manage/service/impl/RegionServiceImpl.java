@@ -1,7 +1,9 @@
 package com.dkd.manage.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import com.dkd.common.utils.DateUtils;
+import com.dkd.manage.domain.vo.RegionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dkd.manage.mapper.RegionMapper;
@@ -10,19 +12,19 @@ import com.dkd.manage.service.IRegionService;
 
 /**
  * 区域管理Service业务层处理
- * 
+ *
  * @author AlanTan
  * @date 2024-07-23
  */
 @Service
-public class RegionServiceImpl implements IRegionService 
+public class RegionServiceImpl implements IRegionService
 {
     @Autowired
     private RegionMapper regionMapper;
 
     /**
      * 查询区域管理
-     * 
+     *
      * @param id 区域管理主键
      * @return 区域管理
      */
@@ -34,7 +36,7 @@ public class RegionServiceImpl implements IRegionService
 
     /**
      * 查询区域管理列表
-     * 
+     *
      * @param region 区域管理
      * @return 区域管理
      */
@@ -46,7 +48,7 @@ public class RegionServiceImpl implements IRegionService
 
     /**
      * 新增区域管理
-     * 
+     *
      * @param region 区域管理
      * @return 结果
      */
@@ -59,7 +61,7 @@ public class RegionServiceImpl implements IRegionService
 
     /**
      * 修改区域管理
-     * 
+     *
      * @param region 区域管理
      * @return 结果
      */
@@ -72,7 +74,7 @@ public class RegionServiceImpl implements IRegionService
 
     /**
      * 批量删除区域管理
-     * 
+     *
      * @param ids 需要删除的区域管理主键
      * @return 结果
      */
@@ -84,7 +86,7 @@ public class RegionServiceImpl implements IRegionService
 
     /**
      * 删除区域管理信息
-     * 
+     *
      * @param id 区域管理主键
      * @return 结果
      */
@@ -92,5 +94,10 @@ public class RegionServiceImpl implements IRegionService
     public int deleteRegionById(Long id)
     {
         return regionMapper.deleteRegionById(id);
+    }
+
+    @Override
+    public List<RegionVo> selectRegionVoList(Region region) {
+        return regionMapper.selectRegionVoList(region);
     }
 }
