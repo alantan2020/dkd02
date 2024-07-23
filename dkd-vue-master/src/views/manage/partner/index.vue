@@ -70,8 +70,9 @@
       </el-table-column>
       <el-table-column label="联系人" align="center" prop="contactPerson" />
       <el-table-column label="联系电话" align="center" prop="contactPhone" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="380px">
         <template #default="scope">
+          <el-button link type="primary" icon="Edit" @click="resetPwd(scope.row)" v-hasPermi="['manage:partner:edit']">重置密码</el-button>
           <el-button link type="primary" icon="Edit" @click="getPartnerInfo(scope.row)" v-hasPermi="['manage:partner:query']">查看详情</el-button>
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['manage:partner:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['manage:partner:remove']">删除</el-button>
@@ -146,7 +147,7 @@
 </template>
 
 <script setup name="Partner">
-import { listPartner, getPartner, delPartner, addPartner, updatePartner } from "@/api/manage/partner";
+import { listPartner, getPartner, delPartner, addPartner, updatePartner, resetPartnerPwd } from "@/api/manage/partner";
 
 const { proxy } = getCurrentInstance();
 
@@ -305,6 +306,16 @@ function handleDelete(row) {
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => {});
+}
+
+/** 重置合作商密码 */
+function resetPwd(row) {
+  const _id = row.id ;
+  proxy.$modal.confirm('是否确认重置合作商密码？').then(function() {
+    return resetPartnerPwd(_id);
+  }).then(() => {
+    proxy.$modal.msgSuccess("重置密码成功");
   }).catch(() => {});
 }
 
