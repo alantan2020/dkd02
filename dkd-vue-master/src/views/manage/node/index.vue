@@ -19,7 +19,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="区域ID" prop="regionId">
+      <el-form-item label="所属区域" prop="regionId">
         <!-- <el-input
           v-model="queryParams.regionId"
           placeholder="请输入区域ID"
@@ -83,16 +83,17 @@
 
     <el-table v-loading="loading" :data="nodeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="序号" type="index" width="50px" align="center" prop="id" />
       <el-table-column label="点位名称" align="center" prop="nodeName" />
-      <el-table-column label="详细地址" align="center" prop="address" />
+      <el-table-column label="区域ID" align="center" prop="regionId" />
       <el-table-column label="商圈类型" align="center" prop="businessType">
         <template #default="scope">
           <dict-tag :options="business_type" :value="scope.row.businessType"/>
         </template>
       </el-table-column>
-      <el-table-column label="区域ID" align="center" prop="regionId" />
+      
       <el-table-column label="合作商ID" align="center" prop="partnerId" />
+      <el-table-column label="详细地址" align="center" prop="address" show-overflow-tooltip/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['manage:node:edit']">修改</el-button>
@@ -111,13 +112,22 @@
 
     <!-- 添加或修改点位管理对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="nodeRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="nodeRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="点位名称" prop="nodeName">
           <el-input v-model="form.nodeName" placeholder="请输入点位名称" />
         </el-form-item>
-        <el-form-item label="详细地址" prop="address">
-          <el-input v-model="form.address" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="所属区域" prop="regionId">
+          <!-- <el-input v-model="form.regionId" placeholder="请输入区域ID" /> -->
+          <el-select v-model="form.regionId" placeholder="请选择所属区域">
+            <el-option
+              v-for="dict in regionList"
+              :key="dict.id"
+              :label="dict.regionName"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
+        
         <el-form-item label="商圈类型" prop="businessType">
           <el-select v-model="form.businessType" placeholder="请选择商圈类型">
             <el-option
@@ -128,11 +138,20 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区域ID" prop="regionId">
-          <el-input v-model="form.regionId" placeholder="请输入区域ID" />
+
+        <el-form-item label="归属合作商" prop="partnerId">
+          <!-- <el-input v-model="form.partnerId" placeholder="请输入合作商ID" /> -->
+          <el-select v-model="form.partnerId" placeholder="请选择合作商ID">
+            <el-option
+              v-for="dict in partnerList"
+              :key="dict.id"
+              :label="dict.partnerName"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="合作商ID" prop="partnerId">
-          <el-input v-model="form.partnerId" placeholder="请输入合作商ID" />
+        <el-form-item label="详细地址" prop="address">
+          <el-input v-model="form.address" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -148,6 +167,7 @@
 <script setup name="Node">
 import { listNode, getNode, delNode, addNode, updateNode } from "@/api/manage/node";
 import { listRegion } from "@/api/manage/region";
+import { listPartner } from "@/api/manage/partner";
 import { loadAllParams } from "@/api/page.js";
 
 
@@ -314,6 +334,15 @@ function getRegionList() {
   });
 }
 
+/** 查询合作商列表 */
+const partnerList = ref([]);
+function getPartnerList() {
+  listPartner(loadAllParams).then(response => {
+    partnerList.value = response.rows;
+  });
+}
+
+getPartnerList();
 getRegionList();
 getList();
 </script>
