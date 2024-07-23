@@ -20,21 +20,19 @@
         </el-select>
       </el-form-item>
       <el-form-item label="区域ID" prop="regionId">
-        <el-input
+        <!-- <el-input
           v-model="queryParams.regionId"
           placeholder="请输入区域ID"
           clearable
           @keyup.enter="handleQuery"
-        />
+        /> -->
+        <el-select  v-model="queryParams.regionId"
+          placeholder="请选择区域"
+          clearable >
+          <el-option v-for="item in regionList" :label="item.regionName" :key="item.id"  :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="合作商ID" prop="partnerId">
-        <el-input
-          v-model="queryParams.partnerId"
-          placeholder="请输入合作商ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -149,6 +147,9 @@
 
 <script setup name="Node">
 import { listNode, getNode, delNode, addNode, updateNode } from "@/api/manage/node";
+import { listRegion } from "@/api/manage/region";
+import { loadAllParams } from "@/api/page.js";
+
 
 const { proxy } = getCurrentInstance();
 const { business_type } = proxy.useDict('business_type');
@@ -305,5 +306,14 @@ function handleExport() {
   }, `node_${new Date().getTime()}.xlsx`)
 }
 
+/** 查询区域列表 */
+const regionList = ref([]);
+function getRegionList() {
+  listRegion(loadAllParams).then(response => {
+    regionList.value = response.rows;
+  });
+}
+
+getRegionList();
 getList();
 </script>
