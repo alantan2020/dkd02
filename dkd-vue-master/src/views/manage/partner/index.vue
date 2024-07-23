@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="合作商名称" prop="partnerName">
+    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="90px">
+      <el-form-item label="合作商名称" prop="partnerName" >
         <el-input
           v-model="queryParams.partnerName"
           placeholder="请输入合作商名称"
@@ -59,12 +59,16 @@
 
     <el-table v-loading="loading" :data="partnerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
-      <el-table-column label="合作商名称" align="center" prop="partnerName" />
+      <el-table-column label="序号" type="index" width="50px" align="center" prop="id" />
+      <el-table-column label="合作商名称" align="center" prop="partnerName"  />
+      <el-table-column label="账号" align="center" prop="account" />
+      <el-table-column label="分成比例" align="center" prop="profitRatio" >
+        <template #default="scope">
+          {{ scope.row.profitRatio  }} %
+        </template>
+      </el-table-column>
       <el-table-column label="联系人" align="center" prop="contactPerson" />
       <el-table-column label="联系电话" align="center" prop="contactPhone" />
-      <el-table-column label="分成比例" align="center" prop="profitRatio" />
-      <el-table-column label="账号" align="center" prop="account" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['manage:partner:edit']">修改</el-button>
@@ -83,7 +87,7 @@
 
     <!-- 添加或修改合作商管理对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="partnerRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="partnerRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="合作商名称" prop="partnerName">
           <el-input v-model="form.partnerName" placeholder="请输入合作商名称" />
         </el-form-item>
@@ -93,14 +97,18 @@
         <el-form-item label="联系电话" prop="contactPhone">
           <el-input v-model="form.contactPhone" placeholder="请输入联系电话" />
         </el-form-item>
+        <el-form-item label="创建时间" prop="contactPhone" v-if="form.id!=null">
+          {{form.createTime}}
+        </el-form-item>
         <el-form-item label="分成比例" prop="profitRatio">
           <el-input v-model="form.profitRatio" placeholder="请输入分成比例" />
         </el-form-item>
-        <el-form-item label="账号" prop="account">
+        <el-form-item label="账号" prop="account" v-if="form.id==null">
+
           <el-input v-model="form.account" placeholder="请输入账号" />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" placeholder="请输入密码" />
+        <el-form-item label="密码" prop="password" v-if="form.id==null">
+          <el-input v-model="form.password" type="password" placeholder="请输入密码" />
         </el-form-item>
       </el-form>
       <template #footer>
