@@ -93,7 +93,7 @@
       </el-table-column>
       
       <el-table-column label="合作商ID" align="center" prop="partnerId" />
-      <el-table-column label="详细地址" align="center" prop="address" show-overflow-tooltip/>
+      <el-table-column label="详细地址" align="left" prop="address" show-overflow-tooltip/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['manage:node:edit']">修改</el-button>
